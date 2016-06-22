@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Parse
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,6 +17,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        
+        Parse.initializeWithConfiguration(
+            ParseClientConfiguration(block: { (configuration:ParseMutableClientConfiguration) -> Void in
+                configuration.applicationId = "Instagram"
+                configuration.clientKey = "instagram"  // set to nil assuming you have not set clientKey
+                configuration.server = "https://guarded-oasis-28558.herokuapp.com/parse"
+            })
+        )
+        
+        if PFUser.currentUser() != nil {
+            // if there is a logged in user then load the home view controller
+        }
+        
         return true
     }
 
