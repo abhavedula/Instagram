@@ -59,7 +59,7 @@ class LoginViewController: UIViewController {
         
         let imageData = img!.lowestQualityJPEGNSData
 
-        newUser["profPick"] = imageData
+        newUser["profPic"] = imageData
         
                 
         // call sign up function on the object

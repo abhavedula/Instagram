@@ -162,14 +162,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
 
-    @IBAction func onSignOut(sender: AnyObject) {
-        PFUser.logOutInBackgroundWithBlock { (error: NSError?) in
-            // PFUser.currentUser() will now be nil
-        }
-        self.performSegueWithIdentifier("SignOutSegue", sender: nil)
-        
-    }
-    
+       
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         
