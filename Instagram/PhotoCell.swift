@@ -21,7 +21,8 @@ class PhotoCell: UITableViewCell {
     
     @IBOutlet weak var photoView: UIImageView!
     
-       
+    @IBOutlet weak var profPicView: UIImageView!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

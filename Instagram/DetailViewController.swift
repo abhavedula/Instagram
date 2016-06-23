@@ -17,8 +17,10 @@ class DetailViewController: UIViewController {
     var author: String?
     var image: PFFile?
     var time: NSDate?
+    var profPic: NSData?
     
 
+    @IBOutlet weak var profPicView: UIImageView!
 
     @IBOutlet weak var userLabel: UILabel!
     
@@ -55,6 +57,11 @@ class DetailViewController: UIViewController {
                 print("Error: \(error)")
             }
         }
+        
+        let profPicImage = UIImage(data: profPic!)
+        
+        profPicView.image = profPicImage
+
 
 
         // Do any additional setup after loading the view.

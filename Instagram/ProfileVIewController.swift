@@ -11,7 +11,7 @@ import Parse
 import ParseUI
 
 class ProfileVIewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate,
-UINavigationControllerDelegate   {
+UINavigationControllerDelegate, UIScrollViewDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     
@@ -24,6 +24,9 @@ UINavigationControllerDelegate   {
     var instagramPosts: [PFObject] = []
     
     var chosenImage: UIImage?
+
+    var isMoreDataLoading = false
+    var loadingMoreView:InfiniteScrollActivityView?
 
     
     override func viewDidLoad() {
@@ -44,13 +47,53 @@ UINavigationControllerDelegate   {
         
         profPicView.image = pic
         
-
+        // Set up Infinite Scroll loading indicator
+        let frame = CGRectMake(0, tableView.contentSize.height, tableView.bounds.size.width, InfiniteScrollActivityView.defaultHeight)
+        loadingMoreView = InfiniteScrollActivityView(frame: frame)
+        loadingMoreView!.hidden = true
+        tableView.addSubview(loadingMoreView!)
         
+        var insets = tableView.contentInset;
+        insets.bottom += InfiniteScrollActivityView.defaultHeight;
+        tableView.contentInset = insets
+    }
+    
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        if (!isMoreDataLoading) {
+            // Calculate the position of one screen length before the bottom of the results
+            let scrollViewContentHeight = tableView.contentSize.height
+            let scrollOffsetThreshold = scrollViewContentHeight - tableView.bounds.size.height
+            
+            // When the user has scrolled past the threshold, start requesting
+            if(scrollView.contentOffset.y > scrollOffsetThreshold && tableView.dragging) {
+                isMoreDataLoading = true
+                
+                // Update position of loadingMoreView, and start loading indicator
+                let frame = CGRectMake(0, tableView.contentSize.height, tableView.bounds.size.width, InfiniteScrollActivityView.defaultHeight)
+                loadingMoreView?.frame = frame
+                loadingMoreView!.startAnimating()
+                
+                // Code to load more results
+                loadMoreData()		
+            }
+        }
+    }
+    
+    func loadMoreData() {
         
-
-
-
-        // Do any additional setup after loading the view.
+       query()
+        
+        // Update flag
+        self.isMoreDataLoading = false
+        
+        // Stop the loading indicator
+        self.loadingMoreView!.stopAnimating()
+        
+        // ... Use the new data to update the data source ...
+        
+        // Reload the tableView now that there is new data
+        self.tableView.reloadData()
+       
     }
 
     override func didReceiveMemoryWarning() {

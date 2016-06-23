@@ -16,7 +16,8 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     var caption: String?
     var author: String?
     var image: PFFile?
-    var time: NSDate? 
+    var time: NSDate?
+    var profPic: NSData?
     
     
     var isMoreDataLoading = false
@@ -32,18 +33,14 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         query()
         
         
-        // Set up Infinite Scroll loading indicator
         let frame = CGRectMake(0, tableView.contentSize.height, tableView.bounds.size.width, InfiniteScrollActivityView.defaultHeight)
         loadingMoreView = InfiniteScrollActivityView(frame: frame)
         loadingMoreView!.hidden = true
         tableView.addSubview(loadingMoreView!)
         
-        // remove to inset
         var insets = tableView.contentInset;
         insets.bottom += InfiniteScrollActivityView.defaultHeight;
         tableView.contentInset = insets
-        
-
         
         
         tableView.dataSource = self
@@ -180,8 +177,6 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         
         cell.authorLabel.text = username
-            
-        
         
         cell.likesLabel.text = String(post["likesCount"]!)
 
@@ -202,6 +197,15 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 print("Error: \(error)")
             }
         }
+        
+        let poster = post["author"] as! PFUser
+        
+        let data = poster["profPic"] as! NSData
+        
+        let profPic = UIImage(data: data)
+        
+        cell.profPicView.image = profPic
+        
         
         let fontSize = cell.authorLabel.font.pointSize;
         cell.authorLabel.font = UIFont(name: "Impact", size: fontSize)
@@ -234,17 +238,22 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         image = post["media"] as? PFFile
         
+        let poster = post["author"] as! PFUser
+        
+        let data = poster["profPic"] as! NSData
+        
+        
+        profPic = data
         
         
         detailViewController.caption = self.caption
         detailViewController.author = self.author
         detailViewController.image = self.image
         detailViewController.time = self.time
-        
+        detailViewController.profPic = self.profPic
 
             }
 
-    
    
     /*
     // MARK: - Navigation
