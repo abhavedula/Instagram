@@ -55,6 +55,13 @@ class LoginViewController: UIViewController {
         newUser.username = usernameField.text
         newUser.password = passwordField.text
         
+        let img = UIImage(named: "noprofile")
+        
+        let imageData = img!.lowestQualityJPEGNSData
+
+        newUser["profPick"] = imageData
+        
+                
         // call sign up function on the object
         newUser.signUpInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
             if let error = error {

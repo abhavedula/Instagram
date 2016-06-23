@@ -10,17 +10,25 @@ import UIKit
 import Parse
 import ParseUI
 
-class ProfileVIewController: UIViewController, UITableViewDataSource, UITableViewDelegate  {
+class ProfileVIewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate,
+UINavigationControllerDelegate   {
 
     @IBOutlet weak var tableView: UITableView!
     
     @IBOutlet weak var userField: UILabel!
     
+    let picker = UIImagePickerController()
+    
+    @IBOutlet weak var profPicView: UIImageView!
+    
     var instagramPosts: [PFObject] = []
+    
+    var chosenImage: UIImage?
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
+         picker.delegate = self
         
         tableView.dataSource = self
         tableView.delegate = self
@@ -29,6 +37,17 @@ class ProfileVIewController: UIViewController, UITableViewDataSource, UITableVie
         query()
         
         userField.text = " \((PFUser.currentUser()?.username)!)"
+        
+        let data = PFUser.currentUser()!["profPic"] as! NSData
+        
+        let pic = UIImage(data: data)
+        
+        profPicView.image = pic
+        
+
+        
+        
+
 
 
         // Do any additional setup after loading the view.
@@ -121,6 +140,47 @@ class ProfileVIewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     
+    @IBAction func uploadProfPic(sender: AnyObject) {
+        picker.allowsEditing = false
+        picker.sourceType = .PhotoLibrary
+        presentViewController(picker, animated: true, completion: nil)
+        
+        
+        
+    }
+    ///////////////////
+    func imagePickerController(
+        picker: UIImagePickerController,
+        didFinishPickingMediaWithInfo info: [String : AnyObject])
+    {
+        chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage
+        profPicView.contentMode = .ScaleAspectFit
+        profPicView.image = chosenImage
+        dismissViewControllerAnimated(true, completion: nil)
+        
+        let user = PFUser.currentUser()
+        
+        let imageData = chosenImage!.lowestQualityJPEGNSData
+        
+        user!["profPic"] = imageData
+        
+        user!.saveInBackgroundWithBlock {
+            (success: Bool, error: NSError?) -> Void in
+            if success == true {
+                print("saved")
+            } else {
+                print((error?.description)!)
+                print("nooooo")
+            }
+        }
+        
+        
+    }
+    
+    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+
 
 
 
@@ -134,4 +194,13 @@ class ProfileVIewController: UIViewController, UITableViewDataSource, UITableVie
     }
     */
 
+}
+
+extension UIImage {
+    var uncompressedPNGData: NSData      { return UIImagePNGRepresentation(self)!        }
+    var highestQualityJPEGNSData: NSData { return UIImageJPEGRepresentation(self, 1.0)!  }
+    var highQualityJPEGNSData: NSData    { return UIImageJPEGRepresentation(self, 0.75)! }
+    var mediumQualityJPEGNSData: NSData  { return UIImageJPEGRepresentation(self, 0.5)!  }
+    var lowQualityJPEGNSData: NSData     { return UIImageJPEGRepresentation(self, 0.25)! }
+    var lowestQualityJPEGNSData:NSData   { return UIImageJPEGRepresentation(self, 0.0)!  }
 }

@@ -8,6 +8,8 @@
 
 import UIKit
 import Parse
+import MBProgressHUD
+
 
 class TakePhotoViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
@@ -24,12 +26,14 @@ class TakePhotoViewController: UIViewController, UIImagePickerControllerDelegate
     
     let picker = UIImagePickerController()
 
-    
+    var count = 0
     
     @IBAction func submitButton(sender: AnyObject) {
         caption = captionField.text
         
+        MBProgressHUD.showHUDAddedTo(self.view, animated: true)
         Post.postUserImage(imageView.image, withCaption: caption, withCompletion: nil)
+        MBProgressHUD.hideHUDForView(self.view, animated: true)
         
         imageView.alpha = 0.3
         
@@ -46,6 +50,9 @@ class TakePhotoViewController: UIViewController, UIImagePickerControllerDelegate
     
     
     @IBAction func takePhoto(sender: AnyObject) {
+        submittedLabel.alpha = 0
+        imageView.alpha = 1
+        
         picker.allowsEditing = false
         picker.sourceType = UIImagePickerControllerSourceType.Camera
         picker.cameraCaptureMode = .Photo
@@ -56,6 +63,9 @@ class TakePhotoViewController: UIViewController, UIImagePickerControllerDelegate
     }
     
     @IBAction func pickPhoto(sender: AnyObject) {
+        submittedLabel.alpha = 0
+        imageView.alpha = 1
+
         picker.allowsEditing = false
         picker.sourceType = .PhotoLibrary
         presentViewController(picker, animated: true, completion: nil)
@@ -65,6 +75,8 @@ class TakePhotoViewController: UIViewController, UIImagePickerControllerDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         submittedLabel.alpha = 0
+        imageView.alpha = 1
+
         picker.delegate = self
         
 
@@ -85,6 +97,51 @@ class TakePhotoViewController: UIViewController, UIImagePickerControllerDelegate
         imageView.contentMode = .ScaleAspectFit
         imageView.image = chosenImage
         dismissViewControllerAnimated(true, completion: nil)
+        
+        
+    }
+    
+    
+    
+    @IBAction func getFilter(sender: AnyObject) {
+        ////////filter
+        MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        let filters = ["CIPhotoEffectoChrome", "CISepiaTone", "CIVignette", "CIPhotoEffectoTransfer"]
+        
+        let inputImage = chosenImage
+        let context = CIContext(options: nil)
+        
+        if let currentFilter = CIFilter(name: filters[count]) {
+            let beginImage = CIImage(image: inputImage!)
+            currentFilter.setValue(beginImage, forKey: kCIInputImageKey)
+            currentFilter.setValue(0.5, forKey: kCIInputIntensityKey)
+            
+            if let output = currentFilter.outputImage {
+                let cgimg = context.createCGImage(output, fromRect: output.extent)
+                let processedImage = UIImage(CGImage: cgimg)
+                
+                // do something interesting with the processed image
+                let portraitImage  : UIImage = UIImage(CGImage: processedImage.CGImage! ,
+                                                       scale: 1.0 ,
+                                                       orientation: UIImageOrientation.Right)
+                imageView.image = portraitImage
+                
+                
+            }
+        }
+        
+        print(filters[count])
+        count += 1
+        if count == filters.count {
+            count = 0
+        }
+        MBProgressHUD.hideHUDForView(self.view, animated: true)
+    }
+  
+    @IBAction func noFilter(sender: AnyObject) {
+        MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        imageView.image = chosenImage
+        MBProgressHUD.hideHUDForView(self.view, animated: true)
     }
     
     
