@@ -18,7 +18,9 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     var image: PFFile?
     var time: NSDate?
     var profPic: NSData?
+    var user: PFUser?
     
+    var profileButtonRow: Int?
     
     var isMoreDataLoading = false
     var loadingMoreView:InfiniteScrollActivityView?
@@ -55,7 +57,6 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         
     }
-    
     func query() {
         
         // construct PFQuery
@@ -73,6 +74,22 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
             self.tableView.reloadData()
         }
+    }
+    
+
+    
+    @IBAction func profileButton(sender: AnyObject) {
+        
+        if let button = sender as? UIButton {
+            if let superview = button.superview {
+                if let cell = superview.superview as? PhotoCell {
+                    profileButtonRow = tableView.indexPathForCell(cell)?.row
+                }
+            }
+        }
+        
+
+        self.performSegueWithIdentifier("profileSegue", sender: nil)
     }
     
     
@@ -220,11 +237,12 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
+       if segue.identifier == "DetailSegue" {
         let indexPathDetail = tableView.indexPathForCell(sender as! PhotoCell)
         
         let detailViewController = segue.destinationViewController as! DetailViewController
         
-
+        
         let post = instagramPosts[indexPathDetail!.row]
         
         caption = post["caption"] as? String
@@ -251,6 +269,37 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         detailViewController.image = self.image
         detailViewController.time = self.time
         detailViewController.profPic = self.profPic
+        
+
+        } else if segue.identifier == "profileSegue" {
+        let detailViewController = segue.destinationViewController as! ProfileClickViewController
+        
+            let post = instagramPosts[profileButtonRow!]
+            image = post["media"] as? PFFile
+            caption = post["caption"] as? String
+            user = post["author"] as! PFUser
+            let username: String = user!.username!
+            author = username
+            let poster = post["author"] as! PFUser
+        
+            let data = poster["profPic"] as! NSData
+        
+        
+            profPic = data
+        
+        detailViewController.caption = self.caption
+        detailViewController.author = self.author
+        detailViewController.image = self.image
+        detailViewController.profPic = self.profPic
+        detailViewController.user = self.user
+
+        
+        
+        
+        
+        
+
+        }
 
             }
 
