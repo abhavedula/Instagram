@@ -119,12 +119,8 @@ class TakePhotoViewController: UIViewController, UIImagePickerControllerDelegate
             if let output = currentFilter.outputImage {
                 let cgimg = context.createCGImage(output, fromRect: output.extent)
                 let processedImage = UIImage(CGImage: cgimg)
-                
-                // do something interesting with the processed image
-                let portraitImage  : UIImage = UIImage(CGImage: processedImage.CGImage! ,
-                                                       scale: 1.0 ,
-                                                       orientation: UIImageOrientation.Right)
-                imageView.image = portraitImage
+    
+                imageView.image = resize(processedImage, newSize: processedImage.size)
                 
                 
             }
@@ -147,6 +143,18 @@ class TakePhotoViewController: UIViewController, UIImagePickerControllerDelegate
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
         dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func resize(image: UIImage, newSize: CGSize) -> UIImage {
+        let resizeImageView = UIImageView(frame: CGRectMake(0, 0, newSize.width, newSize.height))
+        resizeImageView.contentMode = UIViewContentMode.ScaleAspectFill
+        resizeImageView.image = image
+        
+        UIGraphicsBeginImageContext(resizeImageView.frame.size)
+        resizeImageView.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage
     }
 
        /*

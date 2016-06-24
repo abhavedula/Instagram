@@ -54,8 +54,12 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), forControlEvents: UIControlEvents.ValueChanged)
         tableView.insertSubview(refreshControl, atIndex: 0)
         
-        
-        
+       
+
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        tableView.reloadData()
     }
     func query() {
         
@@ -124,17 +128,30 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func loadMoreData() {
         
-        query()
+        // construct PFQuery
+        let query = PFQuery(className: "Post")
+        query.orderByDescending("createdAt")
+        query.includeKey("author")
+        //query.limit = 20
         
-        self.isMoreDataLoading = false
-        
-        // Stop the loading indicator
-        self.loadingMoreView!.stopAnimating()
-        
-        // ... Use the new data to update the data source ...
-        
-        // Reload the tableView now that there is new data
-        self.tableView.reloadData()
+        // fetch data asynchronously
+        query.findObjectsInBackgroundWithBlock { (posts: [PFObject]?, error: NSError?) -> Void in
+            if let posts = posts {
+                self.instagramPosts = posts
+            } else {
+                // handle error
+            }
+            self.isMoreDataLoading = false
+            
+            // Stop the loading indicator
+            self.loadingMoreView!.stopAnimating()
+            
+            // ... Use the new data to update the data source ...
+            
+            // Reload the tableView now that there is new data
+            self.tableView.reloadData()
+        }
+        //print(instagramPosts.count)
         
     }
     
@@ -195,7 +212,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         cell.authorLabel.text = username
         
-        cell.likesLabel.text = String(post["likesCount"]!)
+        cell.likesLabel.text = "Likes: \(String(post["likesCount"]!))"
 
         
         
