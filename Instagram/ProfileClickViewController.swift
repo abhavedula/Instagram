@@ -38,7 +38,7 @@ class ProfileClickViewController: UIViewController, UITableViewDelegate, UITable
         
         profPicView.image = profPicImage
 
-         userLabel.text = author
+         userLabel.text = " \(author!)"
 
         // Do any additional setup after loading the view.
     }
