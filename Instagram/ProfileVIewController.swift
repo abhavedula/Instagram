@@ -46,6 +46,10 @@ UINavigationControllerDelegate, UIScrollViewDelegate {
         let pic = UIImage(data: data)
         
         profPicView.image = pic
+    
+        tableView.separatorColor = UIColor.clearColor()
+
+        
         
         // Set up Infinite Scroll loading indicator
         let frame = CGRectMake(0, tableView.contentSize.height, tableView.bounds.size.width, InfiniteScrollActivityView.defaultHeight)

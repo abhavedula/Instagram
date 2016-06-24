@@ -39,6 +39,9 @@ class ProfileClickViewController: UIViewController, UITableViewDelegate, UITable
         profPicView.image = profPicImage
 
          userLabel.text = " \(author!)"
+        
+        tableView.separatorColor = UIColor.clearColor()
+
 
         // Do any additional setup after loading the view.
     }
