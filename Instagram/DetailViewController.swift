@@ -18,6 +18,7 @@ class DetailViewController: UIViewController {
     var image: PFFile?
     var time: NSDate?
     var profPic: NSData?
+    var likes: String?
     
 
     @IBOutlet weak var profPicView: UIImageView!
@@ -29,6 +30,9 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var captionLabel: UILabel!
     
     @IBOutlet weak var timeLabel: UILabel!
+    
+    
+    @IBOutlet weak var likesLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,6 +47,7 @@ class DetailViewController: UIViewController {
         userLabel.text = author
         captionLabel.text = caption
         timeLabel.text = dateString
+        likesLabel.text = "Likes: \(likes!)"
         
         image!.getDataInBackgroundWithBlock {
             (imageData: NSData?, error: NSError?) -> Void in

@@ -99,12 +99,12 @@
 			isa = PBXGroup;
 			children = (
 				A5ED93641D18A1B600BC6867 /* Main.storyboard */,
+				A56E482C1D189956001B52C9 /* HomeViewController.swift */,
 				A528FF401D1AFA9A00E3FF1D /* DetailViewController.swift */,
 				A535B3A71D19E6FB008D912E /* PhotoCell.swift */,
 				A5ED93681D18EBE600BC6867 /* Post.swift */,
 				A5ED93661D18A20C00BC6867 /* TakePhotoViewController.swift */,
 				A56E48181D188C1B001B52C9 /* AppDelegate.swift */,
-				A56E482C1D189956001B52C9 /* HomeViewController.swift */,
 				A528FF421D1B396D00E3FF1D /* InfiniteScrollActivityView.swift */,
 				A56E481F1D188C1C001B52C9 /* Assets.xcassets */,
 				A56E48211D188C1C001B52C9 /* LaunchScreen.storyboard */,

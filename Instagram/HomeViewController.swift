@@ -19,6 +19,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     var time: NSDate?
     var profPic: NSData?
     var user: PFUser?
+    var likes: String?
     
     var profileButtonRow: Int?
     
@@ -33,8 +34,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     override func viewDidLoad() {
         super.viewDidLoad()
         query()
-        
-        
+
         let frame = CGRectMake(0, tableView.contentSize.height, tableView.bounds.size.width, InfiniteScrollActivityView.defaultHeight)
         loadingMoreView = InfiniteScrollActivityView(frame: frame)
         loadingMoreView!.hidden = true
@@ -59,6 +59,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
        
 
     }
+    
     
     override func viewWillAppear(animated: Bool) {
         tableView.reloadData()
@@ -215,8 +216,9 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         cell.authorLabel.text = username
         
         cell.likesLabel.text = "Likes: \(String(post["likesCount"]!))"
-
         
+        likes = String(post["likesCount"])
+
         
         let pic = post["media"] as? PFFile
         
@@ -288,6 +290,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         detailViewController.image = self.image
         detailViewController.time = self.time
         detailViewController.profPic = self.profPic
+        detailViewController.likes = self.likes
         
 
         } else if segue.identifier == "profileSegue" {
@@ -311,6 +314,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         detailViewController.image = self.image
         detailViewController.profPic = self.profPic
         detailViewController.user = self.user
+        
 
 
         }
