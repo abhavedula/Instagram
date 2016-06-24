@@ -23,9 +23,12 @@ class PhotoCell: UITableViewCell {
     
     @IBOutlet weak var profPicView: UIImageView!
     
+    @IBOutlet weak var likeImage: UIImageView!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        likeImage.tintColor = UIColor.whiteColor()
         
         
         

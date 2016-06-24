@@ -312,13 +312,10 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         detailViewController.profPic = self.profPic
         detailViewController.user = self.user
 
-        
-        
-        
-        
-        
 
         }
+        
+        
 
             }
 
