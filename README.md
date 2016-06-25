@@ -44,9 +44,10 @@ Please list two areas of the assignment you'd like to **discuss further with you
 
 Here's a walkthrough of implemented user stories:
 
-<iframe width="420" height="315"
-src="https://youtu.be/gmEV1q6_QEY">
-</iframe>
+<a href="https://www.youtube.com/watch?v=gmEV1q6_QEY&feature=youtu.be">video</a>
+
+
+
 
 ## Credits
 
